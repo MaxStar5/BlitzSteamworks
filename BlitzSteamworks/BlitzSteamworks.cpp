@@ -115,6 +115,10 @@ BS_API(const char*) GetPlayerName() {
 	return SteamFriends()->GetPersonaName();
 }
 
+BS_API(const char*) GetOtherPlayerName(int upperID, int lowerID) {
+	return SteamFriends()->GetFriendPersonaName(idMerge(upperID, lowerID));
+}
+
 
 std::vector<uint8_t> p2poutput(0);
 
@@ -228,6 +232,75 @@ BS_API(int) CloseConnection(int upperID, int lowerID) {
 	return SteamNetworking()->CloseP2PSessionWithUser(idMerge(upperID, lowerID));
 }
 
+static int lobbyState = 0;
+static std::uint64_t lobbyId;
+BS_API(int) CreateLobby(int lobbyType, int maxMembers) {
+	if (lobbyState > 0) { return 0; }
+	CallbackHandler::instance->lobbyCreatedCallback.Set(SteamMatchmaking()->CreateLobby(static_cast<ELobbyType>(lobbyType), maxMembers), CallbackHandler::instance, &CallbackHandler::handleLobbyCreated);
+	lobbyState = 100;
+	return 1;
+}
+
+BS_API(int) JoinLobby(int upperLobbyID, int lowerLobbyID) {
+	if (lobbyState > 0) { return 0; }
+	CallbackHandler::instance->lobbyEnteredCallback.Set(SteamMatchmaking()->JoinLobby(idMerge(upperLobbyID, lowerLobbyID)), CallbackHandler::instance, &CallbackHandler::handleLobbyEntered);
+	lobbyState = 101;
+	return 1;
+}
+
+BS_API(void) LeaveLobby() {
+	SteamMatchmaking()->LeaveLobby(lobbyId);
+	lobbyState = 0;
+}
+
+// 0 = no lobby
+// 100 = waiting to create lobby
+// 101 = waiting to join lobby
+// 1 = in lobby
+// 2 = in lobby, owner
+// -x = failed to create/join lobby with error code x
+BS_API(int) GetLobbyState() {
+	return lobbyState;
+}
+
+BS_API(int) GetLobbyIDUpper() {
+	return idUpper(lobbyId);
+}
+
+BS_API(int) GetLobbyIDLower() {
+	return idLower(lobbyId);
+}
+
+BS_API(int) GetNumLobbyMembers() {
+	return SteamMatchmaking()->GetNumLobbyMembers(lobbyId);
+}
+
+BS_API(int) GetLobbyMemberIDUpper(int index) {
+	return idUpper(SteamMatchmaking()->GetLobbyMemberByIndex(lobbyId, index).ConvertToUint64());
+}
+
+BS_API(int) GetLobbyMemberIDLower(int index) {
+	return idLower(SteamMatchmaking()->GetLobbyMemberByIndex(lobbyId, index).ConvertToUint64());
+}
+
+BS_API(int) GetLobbyOwnerIDUpper() {
+	return idUpper(SteamMatchmaking()->GetLobbyOwner(lobbyId).ConvertToUint64());
+}
+
+BS_API(int) GetLobbyOwnerIDLower() {
+	return idLower(SteamMatchmaking()->GetLobbyOwner(lobbyId).ConvertToUint64());
+}
+
+BS_API(void) ActivateOverlayInviteDialog() {
+	SteamFriends()->ActivateGameOverlayInviteDialog(lobbyId);
+}
+
+static bool acceptLobbyInvites = true;
+BS_API(void) SetAcceptLobbyInvites(bool accept) {
+	acceptLobbyInvites = accept;
+}
+
+
 BS_API(void) OpenOnScreenKeyboard(int mode, int x, int y, int width, int height) {
 	SteamUtils()->ShowFloatingGamepadTextInput(static_cast<EFloatingGamepadTextInputMode>(mode), x, y, width, height);
 }
@@ -276,3 +349,32 @@ int c = -1;
 void CallbackHandler::handleP2PSessionConnectFail(P2PSessionConnectFail_t* callback) {
 	c = callback->m_eP2PSessionError;
 }
+
+
+void CallbackHandler::handleLobbyCreated(LobbyCreated_t* callback, bool bIOFailure) {
+	if (callback->m_eResult == k_EResultOK) {
+		lobbyState = 2;
+		lobbyId = callback->m_ulSteamIDLobby;
+	} else {
+		lobbyState = -static_cast<int>(callback->m_eResult);
+	}
+}
+
+void CallbackHandler::handleLobbyEntered(LobbyEnter_t* callback, bool bIOFailure) {
+	if (callback->m_EChatRoomEnterResponse == k_EChatRoomEnterResponseSuccess) {
+		if (lobbyState != 2) {
+			lobbyState = 1;
+			lobbyId = callback->m_ulSteamIDLobby;
+		}
+	} else {
+		lobbyState = -static_cast<int>(callback->m_EChatRoomEnterResponse);
+	}
+}
+
+void CallbackHandler::handleGameLobbyJoinRequested(GameLobbyJoinRequested_t* callback) {
+	if (!acceptLobbyInvites) { return; }
+	if (lobbyState > 0) { SteamMatchmaking()->LeaveLobby(lobbyId); }
+	lobbyState = 101;
+	instance->lobbyEnteredCallback.Set(SteamMatchmaking()->JoinLobby(callback->m_steamIDLobby), instance, &CallbackHandler::handleLobbyEntered);
+}
+

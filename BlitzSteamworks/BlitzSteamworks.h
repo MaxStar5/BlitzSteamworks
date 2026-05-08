@@ -144,6 +144,7 @@ private:
 	STEAM_CALLBACK(CallbackHandler, handleGameOverlayActivated, GameOverlayActivated_t);
 	STEAM_CALLBACK(CallbackHandler, handleP2PSessionRequest, P2PSessionRequest_t);
 	STEAM_CALLBACK(CallbackHandler, handleP2PSessionConnectFail, P2PSessionConnectFail_t);
+	STEAM_CALLBACK(CallbackHandler, handleGameLobbyJoinRequested, GameLobbyJoinRequested_t);
 
 public:
 	static CallbackHandler* instance;
@@ -153,5 +154,11 @@ public:
 
 	void handleItemUpdateSubmitted(SubmitItemUpdateResult_t* callback, bool bIOFailure);
 	CCallResult<CallbackHandler, SubmitItemUpdateResult_t> updateItemCallback;
+
+	void handleLobbyCreated(LobbyCreated_t* callback, bool bIOFailure);
+	CCallResult<CallbackHandler, LobbyCreated_t> lobbyCreatedCallback;
+
+	void handleLobbyEntered(LobbyEnter_t* callback, bool bIOFailure);
+	CCallResult<CallbackHandler, LobbyEnter_t> lobbyEnteredCallback;
 };
 
