@@ -1,5 +1,4 @@
 #include "BlitzSteamworks.h"
-using namespace std;
 
 CallbackHandler* CallbackHandler::instance = nullptr;
 
@@ -73,6 +72,15 @@ BS_API(int) GetOverlayUpdated() {
 	return overlayState;
 }
 
+BS_API(void) SetOverlayNotificationInset(float x, float y) {
+	SteamUtils()->SetOverlayNotificationInset(x, y);
+}
+
+
+BS_API(void) SetOverlayNotificationPosition(int pos) {
+	SteamUtils()->SetOverlayNotificationPosition(static_cast<ENotificationPosition>(pos));
+}
+
 
 BS_API(int) SetRichPresence(const char* key, const char* value) {
 	return SteamFriends()->SetRichPresence(key, value);
@@ -100,7 +108,7 @@ BS_API(int) StringToIDLower(const char* cid) {
 }
 
 BS_API(const char*) IDToString(int upperID, int lowerID) {
-	return to_string(idMerge(upperID, lowerID)).c_str();
+	return std::to_string(idMerge(upperID, lowerID)).c_str();
 }
 
 BS_API(int) GetPlayerIDUpper() {
@@ -312,21 +320,21 @@ BS_API(void) CloseOnScreenKeyboard() {
 BS_API(const char*) EE(const char* cid) {
 	P2PSessionState_t p2pSessionState;
 	if (SteamNetworking()->GetP2PSessionState((uint64) std::atoll(cid), &p2pSessionState)) {
-		string s = (to_string(p2pSessionState.m_bConnecting));
+		std::string s = (std::to_string(p2pSessionState.m_bConnecting));
 		s.append("  ");
-		s.append(to_string(p2pSessionState.m_bConnectionActive));
+		s.append(std::to_string(p2pSessionState.m_bConnectionActive));
 		s.append("  ");
-		s.append(to_string(p2pSessionState.m_bUsingRelay));
+		s.append(std::to_string(p2pSessionState.m_bUsingRelay));
 		s.append("  ");
-		s.append(to_string(p2pSessionState.m_eP2PSessionError));
+		s.append(std::to_string(p2pSessionState.m_eP2PSessionError));
 		s.append("  ");
-		s.append(to_string(p2pSessionState.m_nBytesQueuedForSend));
+		s.append(std::to_string(p2pSessionState.m_nBytesQueuedForSend));
 		s.append("  ");
-		s.append(to_string(p2pSessionState.m_nPacketsQueuedForSend));
+		s.append(std::to_string(p2pSessionState.m_nPacketsQueuedForSend));
 		s.append("  ");
-		s.append(to_string(p2pSessionState.m_nRemoteIP));
+		s.append(std::to_string(p2pSessionState.m_nRemoteIP));
 		s.append("  ");
-		s.append(to_string(p2pSessionState.m_nRemotePort));
+		s.append(std::to_string(p2pSessionState.m_nRemotePort));
 		return s.c_str();
 	}
 	return "";
