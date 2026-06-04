@@ -72,10 +72,9 @@ BS_API(int) GetOverlayUpdated() {
 	return overlayState;
 }
 
-BS_API(void) SetOverlayNotificationInset(float x, float y) {
+BS_API(void) SetOverlayNotificationInset(int x, int y) {
 	SteamUtils()->SetOverlayNotificationInset(x, y);
 }
-
 
 BS_API(void) SetOverlayNotificationPosition(int pos) {
 	SteamUtils()->SetOverlayNotificationPosition(static_cast<ENotificationPosition>(pos));

@@ -12,7 +12,7 @@ Steam_GetGameLanguage$():"_GetGameLanguage@0"
 
 Steam_GetOverlayState%():"_GetOverlayState@0"
 Steam_GetOverlayUpdated%():"_GetOverlayUpdated@0"
-Steam_SetOverlayNotificationInset(x#, y#):"_SetOverlayNotificationInset@8"
+Steam_SetOverlayNotificationInset(x%, y%):"_SetOverlayNotificationInset@8"
 Steam_SetOverlayNotificationPosition(pos%):"_SetOverlayNotificationPosition@4"
 
 Steam_SetRichPresence%(key$, value$):"_SetRichPresence@8"
