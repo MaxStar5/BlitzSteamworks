@@ -229,10 +229,11 @@ BS_API(int) LoadPacket() {
 	}
 }
 
-BS_API(int) SendPacketToUser(int upperID, int lowerID) {
-	bool b = SteamNetworking()->SendP2PPacket(idMerge(upperID, lowerID), p2poutput.data(), p2poutput.size(), k_EP2PSendUnreliable);
-	p2poutput.clear();
-	return b;
+BS_API(int) SendPacketToUser(int upperID, int lowerID, int reliable) {
+    EP2PSend sendFlags = reliable ? k_EP2PSendReliable : k_EP2PSendUnreliable;
+    bool b = SteamNetworking()->SendP2PPacket(idMerge(upperID, lowerID), p2poutput.data(), p2poutput.size(), sendFlags);
+    p2poutput.clear();
+    return b ? 1 : 0;
 }
 
 BS_API(int) CloseConnection(int upperID, int lowerID) {
