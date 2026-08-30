@@ -352,8 +352,8 @@ BS_API(const char*) EE(const char* cid) {
 EAuthSessionResponse authResponse;
 
 BS_API(int) BeginAuthSession(void** ticket, int upperID, int lowerID) {
-	const uint8_t* ticket = static_cast<const uint8_t*>(*ticket);
-	return SteamGameServer()->BeginAuthSession(ticket, sizeof(ticket), idMerge(upperID, lowerID));
+	const uint8_t* authTicket = static_cast<const uint8_t*>(*ticket);
+	return SteamGameServer()->BeginAuthSession(authTicket, sizeof(authTicket), idMerge(upperID, lowerID));
 }
 
 BS_API(void) CloseAuthSession(int upperID, int lowerID) {
@@ -361,12 +361,11 @@ BS_API(void) CloseAuthSession(int upperID, int lowerID) {
 }
 
 BS_API(int) GetAuthSessionTicket(void** ticket) {
-	uint8_t* ticket = static_cast<uint8_t*>(*ticket);
+	uint8_t* authTicket = static_cast<uint8_t*>(*ticket);
 	uint32_t ticketSize = 0;
 
-	HAuthTicket handle = SteamUser()->GetAuthSessionTicket(ticket, sizeof(ticket), &ticketSize, nullptr);
+	HAuthTicket handle = SteamUser()->GetAuthSessionTicket(authTicket, sizeof(authTicket), &ticketSize, nullptr);
 	return handle;
-	
 }
 
 BS_API(void) CancelAuthTicket(HAuthTicket handle) {
