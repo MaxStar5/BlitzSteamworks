@@ -75,4 +75,19 @@ Steam_SetAcceptLobbyInvites(accept%):"_SetAcceptLobbyInvites@4"
 Steam_OpenOnScreenKeyboard(mode%, x%, y%, width%, height%):"_OpenOnScreenKeyboard@20"
 Steam_CloseOnScreenKeyboard():"_CloseOnScreenKeyboard@0"
 
+GS_Init%():"_GS_Init@0"
+
+GS_Steam_BeginAuthSession%(ticket*, upperID%, lowerID%):"_BeginAuthSession@12"
+GS_Steam_CloseAuthSession(upperID%, lowerID%):"_CloseAuthSession@8"
+Steam_GetAuthSessionTicket%(ticket*):"_GetAuthSessionTicket@4"
+Steam_CancelAuthTicket(ticket%):"_CancelAuthTicket@4"
+Steam_GetAuthSessionResponse%():"_GetAuthSessionResponse@4"
+
+Steam_GetFriendCount%():"_GetFriendCount@0"
+Steam_GetFriendIDUpper%(friend%):"_GetFriendIDUpper@4"
+Steam_GetFriendIDLower%(friend%):"_GetFriendIDLower@4"
+Steam_GetFriendLobbyIDUpper%(friend%):"_GetFriendLobbyIDUpper@4"
+Steam_GetFriendLobbyIDLower%(friend%):"_GetFriendLobbyIDLower@4"
+Steam_GetFriendName$(friend%):"_GetFriendName@4"
+
 Steam_EE$(cid$):"_EE@4"
