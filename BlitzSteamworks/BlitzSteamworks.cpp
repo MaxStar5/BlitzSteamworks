@@ -368,7 +368,7 @@ BS_API(int) GetAuthSessionTicket(void** ticket) {
 	return handle;
 }
 
-BS_API(int) GetAuthSessionResponse() {
+BS_API(int) _GetAuthSessionResponse() {
 	return authResponse;
 }
 
