@@ -368,6 +368,10 @@ BS_API(int) GetAuthSessionTicket(void** ticket) {
 	return handle;
 }
 
+BS_API(int) GetAuthSessionResponse() {
+	return authResponse;
+}
+
 BS_API(void) CancelAuthTicket(HAuthTicket handle) {
 	SteamUser()->CancelAuthTicket(handle);
 }
