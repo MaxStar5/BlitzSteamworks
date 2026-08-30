@@ -299,6 +299,14 @@ BS_API(int) GetLobbyOwnerIDLower() {
 	return idLower(SteamMatchmaking()->GetLobbyOwner(lobbyId).ConvertToUint64());
 }
 
+BS_API(int) GetLobbyMemberCount(int upperLobbyID, int lowerLobbyID) {
+	return SteamMatchmaking()->GetNumLobbyMembers(idMerge(upperLobbyID, lowerLobbyID));
+}
+
+BS_API(int) GetLobbyMaxMembers(int upperLobbyID, int lowerLobbyID) {
+	return SteamMatchmaking()->GetLobbyMemberLimit(idMerge(upperLobbyID, lowerLobbyID));
+}
+
 BS_API(void) ActivateOverlayInviteDialog() {
 	SteamFriends()->ActivateGameOverlayInviteDialog(lobbyId);
 }
@@ -338,6 +346,73 @@ BS_API(const char*) EE(const char* cid) {
 		return s.c_str();
 	}
 	return "";
+}
+
+// Auth session
+EAuthSessionResponse authResponse;
+
+BS_API(int) BeginAuthSession(void** ticket, int upperID, int lowerID) {
+	const uint8_t* ticket = static_cast<const uint8_t*>(*ticket);
+	return SteamGameServer()->BeginAuthSession(ticket, sizeof(ticket), idMerge(upperID, lowerID));
+}
+
+BS_API(void) CloseAuthSession(int upperID, int lowerID) {
+	SteamGameServer()->EndAuthSession(idMerge(upperID, lowerID));
+}
+
+BS_API(int) GetAuthSessionTicket(void** ticket) {
+	uint8_t* ticket = static_cast<uint8_t*>(*ticket);
+	uint32_t ticketSize = 0;
+
+	HAuthTicket handle = SteamUser()->GetAuthSessionTicket(ticket, sizeof(ticket), &ticketSize, nullptr);
+	return handle;
+	
+}
+
+BS_API(void) CancelAuthTicket(HAuthTicket handle) {
+	SteamUser()->CancelAuthTicket(handle);
+}
+
+BS_API(int) GS_Init(int IP, int gamePort, int queryPort, EServerMode mode, const char* version) {
+	return SteamGameServer_Init(IP, gamePort, queryPort, mode, version);
+}
+
+BS_API(int) GetFriendCount() {
+	return SteamFriends()->GetFriendCount(k_EFriendFlagImmediate);
+}
+
+BS_API(int) GetFriendIDUpper(int friendIndex) {
+	CSteamID id = SteamFriends()->GetFriendByIndex(friendIndex, k_EFriendFlagImmediate);
+	return idUpper(id.ConvertToUint64());
+}
+
+BS_API(int) GetFriendIDLower(int friendIndex) {
+	CSteamID id = SteamFriends()->GetFriendByIndex(friendIndex, k_EFriendFlagImmediate);
+	return idLower(id.ConvertToUint64());
+}
+
+BS_API(int) GetFriendLobbyIDUpper(int friendIndex) {
+	CSteamID friendID = SteamFriends()->GetFriendByIndex(friendIndex, k_EFriendFlagImmediate);
+	FriendGameInfo_t gameInfo{};
+
+	if (!SteamFriends()->GetFriendGamePlayed(friendID, &gameInfo)) return 0;
+
+	return idUpper(gameInfo.m_steamIDLobby.ConvertToUint64());
+}
+
+BS_API(int) GetFriendLobbyIDLower(int friendIndex) {
+	CSteamID friendID = SteamFriends()->GetFriendByIndex(friendIndex, k_EFriendFlagImmediate);
+	FriendGameInfo_t gameInfo{};
+
+	if (!SteamFriends()->GetFriendGamePlayed(friendID, &gameInfo)) return 0;
+
+	return idLower(gameInfo.m_steamIDLobby.ConvertToUint64());
+}
+
+BS_API(const char*) GetFriendName(int friendIndex) {
+	CSteamID friendID = SteamFriends()->GetFriendByIndex(friendIndex, k_EFriendFlagImmediate);
+
+	return SteamFriends()->GetFriendPersonaName(friendID);
 }
 
 void CallbackHandler::handleUserStatsReceived(UserStatsReceived_t* callback) {
@@ -386,3 +461,6 @@ void CallbackHandler::handleGameLobbyJoinRequested(GameLobbyJoinRequested_t* cal
 	instance->lobbyEnteredCallback.Set(SteamMatchmaking()->JoinLobby(callback->m_steamIDLobby), instance, &CallbackHandler::handleLobbyEntered);
 }
 
+void CallbackHandler::handleOnAuthTicketResponse(ValidateAuthTicketResponse_t* callback) {
+	authResponse = callback->m_eAuthSessionResponse;
+}

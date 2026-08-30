@@ -12,6 +12,7 @@
 
 #include "windows.h"
 #include "steam_api.h"
+#include <steam_gameserver.h>
 #include <vector>
 #include <string>
 
@@ -145,6 +146,7 @@ private:
 	STEAM_CALLBACK(CallbackHandler, handleP2PSessionRequest, P2PSessionRequest_t);
 	STEAM_CALLBACK(CallbackHandler, handleP2PSessionConnectFail, P2PSessionConnectFail_t);
 	STEAM_CALLBACK(CallbackHandler, handleGameLobbyJoinRequested, GameLobbyJoinRequested_t);
+	STEAM_CALLBACK(CallbackHandler, handleOnAuthTicketResponse, ValidateAuthTicketResponse_t);
 
 public:
 	static CallbackHandler* instance;
