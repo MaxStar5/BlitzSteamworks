@@ -82,8 +82,8 @@ Steam_GetAuthSessionTicket%(ticket*, ticketSize%):"_GetAuthSessionTicket@4"
 Steam_CancelAuthTicket(ticket%):"_CancelAuthTicket@4"
 
 Steam_GetAuthSessionResponse%():"__GetAuthSessionResponse@0"
-Steam_GetAuthSessionReponseIDLower%():"_GetAuthSessionReponseIDLower@0"
-Steam_GetAuthSessionReponseIDUpper%():"_GetAuthSessionReponseIDUpper@0"
+Steam_GetAuthSessionResponseIDLower%():"_GetAuthSessionReponseIDLower@0"
+Steam_GetAuthSessionResponseIDUpper%():"_GetAuthSessionReponseIDUpper@0"
 
 Steam_GetFriendCount%():"_GetFriendCount@0"
 Steam_GetFriendIDUpper%(friend%):"_GetFriendIDUpper@4"
