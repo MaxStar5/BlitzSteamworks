@@ -75,13 +75,11 @@ Steam_SetAcceptLobbyInvites(accept%):"_SetAcceptLobbyInvites@4"
 Steam_OpenOnScreenKeyboard(mode%, x%, y%, width%, height%):"_OpenOnScreenKeyboard@20"
 Steam_CloseOnScreenKeyboard():"_CloseOnScreenKeyboard@0"
 
-GS_Init%():"_GS_Init@0"
-
-GS_Steam_BeginAuthSession%(ticket*, upperID%, lowerID%):"_BeginAuthSession@12"
-GS_Steam_CloseAuthSession(upperID%, lowerID%):"_CloseAuthSession@8"
+Steam_BeginAuthSession%(ticket*, upperID%, lowerID%):"_BeginAuthSession@12"
+Steam_EndAuthSession(upperID%, lowerID%):"_EndAuthSession@8"
 Steam_GetAuthSessionTicket%(ticket*):"_GetAuthSessionTicket@4"
 Steam_CancelAuthTicket(ticket%):"_CancelAuthTicket@4"
-Steam_GetAuthSessionResponse%():"_GetAuthSessionResponse@4"
+Steam_GetAuthSessionResponse%():"__GetAuthSessionResponse@4"
 
 Steam_GetFriendCount%():"_GetFriendCount@0"
 Steam_GetFriendIDUpper%(friend%):"_GetFriendIDUpper@4"
@@ -91,3 +89,15 @@ Steam_GetFriendLobbyIDLower%(friend%):"_GetFriendLobbyIDLower@4"
 Steam_GetFriendName$(friend%):"_GetFriendName@4"
 
 Steam_EE$(cid$):"_EE@4"
+
+GS_Init%(ip%, gamePort%, queryPort%, mode%, version$):"_GS_Init@20"
+GS_LogOn(appID$, desc$):"_GS_LogOn@8"
+GS_LogOff():"_GS_LogOff@0"
+
+GS_IsLoggedOn():"_GS_IsLoggedOn@0"
+GS_Update():"_GS_Update@0"
+GS_GetSteamServersConnected():"_GS_GetSteamServersConnected@0"
+
+GS_BeginAuthSession%(ticket*, upperID%, lowerID%):"_GS_BeginAuthSession@12"
+GS_EndAuthSession(upperID%, lowerID%):"_GS_EndAuthSession@8"
+; Steam_GetAuthSessionResponse() works for the client and gameserver.
