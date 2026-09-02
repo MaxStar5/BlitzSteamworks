@@ -1,6 +1,6 @@
 #include "BlitzSteamworks.h"
 
-EResult steamServersConnected;
+int steamServersConnected;
 extern uint64 idMerge(int upper, int lower);
 
 BS_API(int) GS_Init(int IP, int gamePort, int queryPort, EServerMode mode, const char* version) {
@@ -42,9 +42,9 @@ BS_API(int) GS_BeginAuthSession(void** ticket, int ticketSize, int upperID, int 
 BS_API(int) GS_GetSteamServersConnected() { return steamServersConnected; }
 
 void CallbackHandler::handleSteamServersConnected(SteamServersConnected_t* pCallback) {
-	steamServersConnected = k_EResultOK;
+	steamServersConnected = 1;
 }
 
 void CallbackHandler::handleSteamServersConnectFailure(SteamServerConnectFailure_t* pCallBack) {
-	steamServersConnected = pCallBack->m_eResult;
+	steamServersConnected = static_cast<int>(pCallBack->m_eResult);
 }
