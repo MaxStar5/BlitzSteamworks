@@ -34,9 +34,9 @@ BS_API(void) GS_EndAuthSession(int upperID, int lowerID) {
 	SteamGameServer()->EndAuthSession(idMerge(upperID, lowerID));
 }
 
-BS_API(int) GS_BeginAuthSession(void** ticket, int upperID, int lowerID) {
+BS_API(int) GS_BeginAuthSession(void** ticket, int ticketSize, int upperID, int lowerID) {
 	const uint8_t* authTicket = static_cast<const uint8_t*>(*ticket);
-	return SteamGameServer()->BeginAuthSession(authTicket, sizeof(authTicket), idMerge(upperID, lowerID));
+	return SteamGameServer()->BeginAuthSession(authTicket, ticketSize, idMerge(upperID, lowerID));
 }
 
 BS_API(int) GS_GetSteamServersConnected() { return steamServersConnected; }

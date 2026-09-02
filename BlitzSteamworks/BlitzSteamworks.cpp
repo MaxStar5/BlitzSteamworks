@@ -351,20 +351,20 @@ BS_API(const char*) EE(const char* cid) {
 // Auth session
 EAuthSessionResponse authResponse;
 
-BS_API(int) BeginAuthSession(void** ticket, int upperID, int lowerID) {
+BS_API(int) BeginAuthSession(void** ticket, int ticketSize, int upperID, int lowerID) {
 	const uint8_t* authTicket = static_cast<const uint8_t*>(*ticket);
-	return SteamUser()->BeginAuthSession(authTicket, sizeof(authTicket), idMerge(upperID, lowerID));
+	return SteamUser()->BeginAuthSession(authTicket, ticketSize, idMerge(upperID, lowerID));
 }
 
 BS_API(void) EndAuthSession(int upperID, int lowerID) {
 	SteamUser()->EndAuthSession(idMerge(upperID, lowerID));
 }
 
-BS_API(int) GetAuthSessionTicket(void** ticket) {
+BS_API(int) GetAuthSessionTicket(void** ticket, int ticketSize) {
 	uint8_t* authTicket = static_cast<uint8_t*>(*ticket);
-	uint32_t ticketSize = 0;
+	uint32_t pcbTicket = 0;
 
-	HAuthTicket handle = SteamUser()->GetAuthSessionTicket(authTicket, sizeof(authTicket), &ticketSize, nullptr);
+	HAuthTicket handle = SteamUser()->GetAuthSessionTicket(authTicket, ticketSize, &pcbTicket, nullptr);
 	return handle;
 }
 
