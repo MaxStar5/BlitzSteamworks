@@ -16,6 +16,7 @@ BS_API(void) GS_LogOn(const char* appID, const char* desc) {
 	SteamGameServer()->SetGameDescription(desc);
 
 	SteamGameServer()->LogOnAnonymous();
+	steamServersConnected = 0;
 }
 
 BS_API(void) GS_LogOff() {
