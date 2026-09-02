@@ -32,6 +32,7 @@ Steam_GetSubscribedItemPath$(id%):"_GetSubscribedItemPath@4"
 Steam_StringToIDUpper%(cid$):"_StringToIDUpper@4"
 Steam_StringToIDLower%(cid$):"_StringToIDLower@4"
 
+Steam_ID64To32%(cid$):"_SteamID64To32@4"
 Steam_IDToString$(upperID%, lowerID%):"_IDToString@8"
 
 Steam_GetPlayerIDUpper%():"_GetPlayerIDUpper@0"
@@ -79,7 +80,10 @@ Steam_BeginAuthSession%(ticket*, ticketSize%, upperID%, lowerID%):"_BeginAuthSes
 Steam_EndAuthSession(upperID%, lowerID%):"_EndAuthSession@8"
 Steam_GetAuthSessionTicket%(ticket*, ticketSize%):"_GetAuthSessionTicket@4"
 Steam_CancelAuthTicket(ticket%):"_CancelAuthTicket@4"
-Steam_GetAuthSessionResponse%():"__GetAuthSessionResponse@4"
+
+Steam_GetAuthSessionResponse%():"__GetAuthSessionResponse@0"
+Steam_GetAuthSessionReponseIDLower%():"_GetAuthSessionReponseIDLower@0"
+Steam_GetAuthSessionReponseIDUpper%():"_GetAuthSessionReponseIDUpper@0"
 
 Steam_GetFriendCount%():"_GetFriendCount@0"
 Steam_GetFriendIDUpper%(friend%):"_GetFriendIDUpper@4"

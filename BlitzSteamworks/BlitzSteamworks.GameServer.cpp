@@ -1,6 +1,6 @@
 #include "BlitzSteamworks.h"
 
-bool steamServersConnected;
+EResult steamServersConnected;
 extern uint64 idMerge(int upper, int lower);
 
 BS_API(int) GS_Init(int IP, int gamePort, int queryPort, EServerMode mode, const char* version) {

@@ -98,6 +98,11 @@ uint64 idMerge(int upper, int lower) {
 	return ((uint64) upper << 32) | lower;
 }
 
+BS_API(int) SteamID64To32(const char* cid) {
+	CSteamID id((uint64)atoll(cid));
+	return id.GetAccountID();
+}
+
 BS_API(int) StringToIDUpper(const char* cid) {
 	return idUpper(atoll(cid));
 }
@@ -350,6 +355,7 @@ BS_API(const char*) EE(const char* cid) {
 
 // Auth session
 EAuthSessionResponse authResponse;
+uint64_t authSteamID;
 
 BS_API(int) BeginAuthSession(void** ticket, int ticketSize, int upperID, int lowerID) {
 	const uint8_t* authTicket = static_cast<const uint8_t*>(*ticket);
@@ -370,6 +376,14 @@ BS_API(int) GetAuthSessionTicket(void** ticket, int ticketSize) {
 
 BS_API(int) _GetAuthSessionResponse() {
 	return authResponse;
+}
+
+BS_API(int) GetAuthSessionReponseIDLower() {
+	return idLower(authSteamID);
+}
+
+BS_API(int) GetAuthSessionReponseIDUpper() {
+	return idUpper(authSteamID);
 }
 
 BS_API(void) CancelAuthTicket(HAuthTicket handle) {
@@ -462,4 +476,5 @@ void CallbackHandler::handleGameLobbyJoinRequested(GameLobbyJoinRequested_t* cal
 
 void CallbackHandler::handleAuthTicketResponse(ValidateAuthTicketResponse_t* callback) {
 	authResponse = callback->m_eAuthSessionResponse;
+	authSteamID = callback->m_SteamID.ConvertToUint64();
 }
