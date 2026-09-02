@@ -94,9 +94,9 @@ GS_Init%(ip%, gamePort%, queryPort%, mode%, version$):"_GS_Init@20"
 GS_LogOn(appID$, desc$):"_GS_LogOn@8"
 GS_LogOff():"_GS_LogOff@0"
 
-GS_IsLoggedOn():"_GS_IsLoggedOn@0"
+GS_IsLoggedOn%():"_GS_IsLoggedOn@0"
 GS_Update():"_GS_Update@0"
-GS_GetSteamServersConnected():"_GS_GetSteamServersConnected@0"
+GS_GetSteamServersConnected%():"_GS_GetSteamServersConnected@0"
 
 GS_BeginAuthSession%(ticket*, upperID%, lowerID%):"_GS_BeginAuthSession@12"
 GS_EndAuthSession(upperID%, lowerID%):"_GS_EndAuthSession@8"
