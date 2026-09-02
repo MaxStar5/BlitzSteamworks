@@ -146,7 +146,9 @@ private:
 	STEAM_CALLBACK(CallbackHandler, handleP2PSessionRequest, P2PSessionRequest_t);
 	STEAM_CALLBACK(CallbackHandler, handleP2PSessionConnectFail, P2PSessionConnectFail_t);
 	STEAM_CALLBACK(CallbackHandler, handleGameLobbyJoinRequested, GameLobbyJoinRequested_t);
-	STEAM_CALLBACK(CallbackHandler, handleOnAuthTicketResponse, ValidateAuthTicketResponse_t);
+	STEAM_CALLBACK(CallbackHandler, handleAuthTicketResponse, ValidateAuthTicketResponse_t);
+	STEAM_CALLBACK(CallbackHandler, handleSteamServersConnected, SteamServersConnected_t);
+	STEAM_CALLBACK(CallbackHandler, handleSteamServersConnectFailure, SteamServerConnectFailure_t);
 
 public:
 	static CallbackHandler* instance;

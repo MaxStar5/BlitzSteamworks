@@ -353,11 +353,11 @@ EAuthSessionResponse authResponse;
 
 BS_API(int) BeginAuthSession(void** ticket, int upperID, int lowerID) {
 	const uint8_t* authTicket = static_cast<const uint8_t*>(*ticket);
-	return SteamGameServer()->BeginAuthSession(authTicket, sizeof(authTicket), idMerge(upperID, lowerID));
+	return SteamUser()->BeginAuthSession(authTicket, sizeof(authTicket), idMerge(upperID, lowerID));
 }
 
-BS_API(void) CloseAuthSession(int upperID, int lowerID) {
-	SteamGameServer()->EndAuthSession(idMerge(upperID, lowerID));
+BS_API(void) EndAuthSession(int upperID, int lowerID) {
+	SteamUser()->EndAuthSession(idMerge(upperID, lowerID));
 }
 
 BS_API(int) GetAuthSessionTicket(void** ticket) {
@@ -374,10 +374,6 @@ BS_API(int) _GetAuthSessionResponse() {
 
 BS_API(void) CancelAuthTicket(HAuthTicket handle) {
 	SteamUser()->CancelAuthTicket(handle);
-}
-
-BS_API(int) GS_Init(int IP, int gamePort, int queryPort, EServerMode mode, const char* version) {
-	return SteamGameServer_Init(IP, gamePort, queryPort, mode, version);
 }
 
 BS_API(int) GetFriendCount() {
@@ -464,6 +460,6 @@ void CallbackHandler::handleGameLobbyJoinRequested(GameLobbyJoinRequested_t* cal
 	instance->lobbyEnteredCallback.Set(SteamMatchmaking()->JoinLobby(callback->m_steamIDLobby), instance, &CallbackHandler::handleLobbyEntered);
 }
 
-void CallbackHandler::handleOnAuthTicketResponse(ValidateAuthTicketResponse_t* callback) {
+void CallbackHandler::handleAuthTicketResponse(ValidateAuthTicketResponse_t* callback) {
 	authResponse = callback->m_eAuthSessionResponse;
 }

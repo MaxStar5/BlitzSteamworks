@@ -21,6 +21,9 @@
     <ClCompile Include="BlitzSteamworks.Workshop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BlitzSteamworks.GameServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BlitzSteamworks.h">
