@@ -4,11 +4,10 @@ int steamServersConnected;
 extern uint64 idMerge(int upper, int lower);
 
 BS_API(int) GS_Init(int IP, int gamePort, int queryPort, EServerMode mode, const char* version) {
-	if (SteamGameServer_Init(IP, gamePort, queryPort, mode, version)) {
-		CallbackHandler::instance = new CallbackHandler();
-		return 1;
-	}
-	return 0;
+	ESteamAPIInitResult result = SteamGameServer_InitEx(IP, gamePort, queryPort, mode, version, nullptr);
+	if(result == k_ESteamAPIInitResult_OK) CallbackHandler::instance = new CallbackHandler();
+
+	return static_cast<int>(result);
 }
 
 BS_API(void) GS_LogOn(const char* appID, const char* desc) {
