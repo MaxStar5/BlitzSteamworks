@@ -95,6 +95,7 @@ Steam_GetFriendName$(friend%):"_GetFriendName@4"
 Steam_EE$(cid$):"_EE@4"
 
 GS_Init%(ip%, gamePort%, queryPort%, mode%, version$):"_GS_Init@20"
+GS_Shutdown():"_GS_Shutdown@0"
 GS_LogOn(appID$, desc$):"_GS_LogOn@8"
 GS_LogOff():"_GS_LogOff@0"
 

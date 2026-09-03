@@ -10,6 +10,12 @@ BS_API(int) GS_Init(int IP, int gamePort, int queryPort, EServerMode mode, const
 	return static_cast<int>(result);
 }
 
+BS_API(void) GS_Shutdown()
+{
+	SteamGameServer_Shutdown();
+	delete CallbackHandler::instance;
+}
+
 BS_API(void) GS_LogOn(const char* appID, const char* desc) {
 	SteamGameServer()->SetProduct(appID);
 	SteamGameServer()->SetGameDescription(desc);
@@ -47,4 +53,12 @@ void CallbackHandler::handleSteamServersConnected(SteamServersConnected_t* pCall
 
 void CallbackHandler::handleSteamServersConnectFailure(SteamServerConnectFailure_t* pCallBack) {
 	steamServersConnected = static_cast<int>(pCallBack->m_eResult);
+}
+
+extern EAuthSessionResponse authResponse;
+extern uint64_t authSteamID;
+
+void CallbackHandler::handleGameServerAuthTicketResponse(ValidateAuthTicketResponse_t* callback) {
+	authResponse = callback->m_eAuthSessionResponse;
+	authSteamID = callback->m_SteamID.ConvertToUint64();
 }
