@@ -356,6 +356,7 @@ BS_API(const char*) EE(const char* cid) {
 // Auth session
 EAuthSessionResponse authResponse;
 uint64_t authSteamID;
+uint32_t pcbTicket;
 
 BS_API(int) BeginAuthSession(void** ticket, int ticketSize, int upperID, int lowerID) {
 	const uint8_t* authTicket = static_cast<const uint8_t*>(*ticket);
@@ -368,7 +369,6 @@ BS_API(void) EndAuthSession(int upperID, int lowerID) {
 
 BS_API(int) GetAuthSessionTicket(void** ticket, int ticketSize) {
 	uint8_t* authTicket = static_cast<uint8_t*>(*ticket);
-	uint32_t pcbTicket = 0;
 
 	HAuthTicket handle = SteamUser()->GetAuthSessionTicket(authTicket, ticketSize, &pcbTicket, nullptr);
 	return handle;
@@ -385,6 +385,8 @@ BS_API(int) GetAuthSessionReponseIDLower() {
 BS_API(int) GetAuthSessionReponseIDUpper() {
 	return idUpper(authSteamID);
 }
+
+BS_API(int) GetAuthSessionTicketSize() { return static_cast<int>(pcbTicket); }
 
 BS_API(void) CancelAuthTicket(HAuthTicket handle) {
 	SteamUser()->CancelAuthTicket(handle);
