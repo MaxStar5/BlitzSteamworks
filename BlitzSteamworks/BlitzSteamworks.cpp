@@ -430,6 +430,10 @@ BS_API(const char*) GetFriendName(int friendIndex) {
 	return SteamFriends()->GetFriendPersonaName(friendID);
 }
 
+BS_API(void) ActivateGameOverlayToUser(const char* dialog, int upperID, int lowerID) {
+	SteamFriends()->ActivateGameOverlayToUser(dialog, idMerge(upperID, lowerID));
+}
+
 void CallbackHandler::handleUserStatsReceived(UserStatsReceived_t* callback) {
 	b = -static_cast<int>(callback->m_eResult);
 }
