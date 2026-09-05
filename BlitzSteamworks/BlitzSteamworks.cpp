@@ -430,7 +430,7 @@ BS_API(const char*) GetFriendName(int friendIndex) {
 	return SteamFriends()->GetFriendPersonaName(friendID);
 }
 
-BS_API(int) Steam_GetLargeFriendAvatar(int upperID, int lowerID)
+BS_API(int) GetLargeUserAvatar(int upperID, int lowerID)
 {
 	return SteamFriends()->GetLargeFriendAvatar(idMerge(upperID, lowerID));
 }
