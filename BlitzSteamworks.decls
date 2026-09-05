@@ -92,6 +92,13 @@ Steam_GetFriendIDLower%(friend%):"_GetFriendIDLower@4"
 Steam_GetFriendLobbyIDUpper%(friend%):"_GetFriendLobbyIDUpper@4"
 Steam_GetFriendLobbyIDLower%(friend%):"_GetFriendLobbyIDLower@4"
 Steam_GetFriendName$(friend%):"_GetFriendName@4"
+Steam_ActivateOverlayToUser(dialog$, upperID%, lowerID%):"_ActivateGameOverlayToUser@12"
+
+Steam_GetLargeUserAvatar%(upperID%, lowerID%):"_GetLargeUserAvatar@8"
+Steam_GetUserImageHeight(image%):"_GetUserImageHeight@4"
+Steam_GetUserImageWidth(image%):"_GetUserImageWidth@4"
+Steam_GetUserImageRGBA(image%, buffer*, bufferSize%):"_GetUserImageRGBA@12"
+Steam_RequestUserInformation(upperID%, lowerID%, onlyName%):"_RequestUserInformation@12"
 
 Steam_EE$(cid$):"_EE@4"
 
