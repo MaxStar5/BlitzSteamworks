@@ -266,6 +266,10 @@ BS_API(void) LeaveLobby() {
 	lobbyState = 0;
 }
 
+BS_API(int) SetLobbyType(int lobbyType) {
+	return SteamMatchmaking()->SetLobbyType(lobbyId, static_cast<ELobbyType>(lobbyType)) ? 1 : 0;
+}
+
 // 0 = no lobby
 // 100 = waiting to create lobby
 // 101 = waiting to join lobby
@@ -428,6 +432,10 @@ BS_API(const char*) GetFriendName(int friendIndex) {
 	CSteamID friendID = SteamFriends()->GetFriendByIndex(friendIndex, k_EFriendFlagImmediate);
 
 	return SteamFriends()->GetFriendPersonaName(friendID);
+}
+
+BS_API(void) SetPlayedWith(int upperID, int lowerID) {
+	SteamFriends()->SetPlayedWith(idMerge(upperID, lowerID));
 }
 
 BS_API(int) GetLargeUserAvatar(int upperID, int lowerID)
