@@ -430,6 +430,38 @@ BS_API(const char*) GetFriendName(int friendIndex) {
 	return SteamFriends()->GetFriendPersonaName(friendID);
 }
 
+BS_API(int) Steam_GetLargeFriendAvatar(int upperID, int lowerID)
+{
+	return SteamFriends()->GetLargeFriendAvatar(idMerge(upperID, lowerID));
+}
+
+BS_API(int) GetUserImageHeight(int image) {
+	uint32_t width = 0;
+	uint32_t height = 0;
+
+	if (!SteamUtils()->GetImageSize(image, &width, &height)) return 0;
+
+	return height;
+}
+
+BS_API(int) GetUserImageWidth(int image) {
+	uint32_t width = 0;
+	uint32_t height = 0;
+
+	if (!SteamUtils()->GetImageSize(image, &width, &height)) return 0;
+
+	return width;
+}
+
+BS_API(int) GetUserImageRGBA(int image, void** buffer, int bufferSize) {
+	uint8_t* imageBuffer = static_cast<uint8_t*>(*buffer);
+	return SteamUtils()->GetImageRGBA(image, imageBuffer, bufferSize);
+}
+
+BS_API(int) RequestUserInformation(int upperID, int lowerID, int onlyName) {
+	return SteamFriends()->RequestUserInformation(idMerge(upperID, lowerID), onlyName);
+}
+
 BS_API(void) ActivateGameOverlayToUser(const char* dialog, int upperID, int lowerID) {
 	SteamFriends()->ActivateGameOverlayToUser(dialog, idMerge(upperID, lowerID));
 }
