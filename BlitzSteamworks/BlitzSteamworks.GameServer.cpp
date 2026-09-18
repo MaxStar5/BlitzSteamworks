@@ -40,9 +40,9 @@ BS_API(void) GS_EndAuthSession(int upperID, int lowerID) {
 	SteamGameServer()->EndAuthSession(idMerge(upperID, lowerID));
 }
 
-BS_API(int) GS_BeginAuthSession(void** ticket, int ticketSize, int upperID, int lowerID) {
-	const uint8_t* authTicket = static_cast<const uint8_t*>(*ticket);
-	return SteamGameServer()->BeginAuthSession(authTicket, ticketSize, idMerge(upperID, lowerID));
+BS_API(int) GS_BeginAuthSession(const void* ticket, int ticketSize, int upperID, int lowerID) {
+	//const void* authTicket = static_cast<const void*>(*ticket);
+	return static_cast<int>(SteamGameServer()->BeginAuthSession(ticket, ticketSize, idMerge(upperID, lowerID)));
 }
 
 BS_API(int) GS_GetSteamServersConnected() { return steamServersConnected; }
@@ -56,9 +56,14 @@ void CallbackHandler::handleSteamServersConnectFailure(SteamServerConnectFailure
 }
 
 extern EAuthSessionResponse authResponse;
-extern uint64_t authSteamID;
+extern uint32_t authSteamIDUpper, authSteamIDLower;
+extern int idUpper(uint64_t cid);
+extern int idLower(uint64_t cid);
 
 void CallbackHandler::handleGameServerAuthTicketResponse(ValidateAuthTicketResponse_t* callback) {
 	authResponse = callback->m_eAuthSessionResponse;
-	authSteamID = callback->m_SteamID.ConvertToUint64();
+
+	uint64_t id = callback->m_SteamID.ConvertToUint64();
+	authSteamIDUpper = idUpper(id);
+	authSteamIDLower = idLower(id);
 }

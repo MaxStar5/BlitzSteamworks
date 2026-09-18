@@ -42,15 +42,17 @@ Steam_GetOtherPlayerName$(upperID%, lowerID%):"_GetOtherPlayerName@8"
 
 Steam_PushByte(b%):"_PushByte@4"
 Steam_PushShort(s%):"_PushShort@4"
-Steam_PushInt%(i%):"_PushInt@4"
-Steam_PushFloat#(f#):"_PushFloat@4"
-Steam_PushString$(s$):"_PushString@4"
+Steam_PushInt(i%):"_PushInt@4"
+Steam_PushFloat(f#):"_PushFloat@4"
+Steam_PushString(s$):"_PushString@4"
+Steam_PushBytes(bank*, offset%, size%):"_PushBytes@12"
 
 Steam_PullByte%():"_PullByte@0"
 Steam_PullShort%():"_PullShort@0"
 Steam_PullInt%():"_PullInt@0"
 Steam_PullFloat#():"_PullFloat@0"
 Steam_PullString$():"_PullString@0"
+Steam_PullBytes%(bank*, offset%, size%):"_PullBytes@12"
 
 Steam_GetSenderIDUpper%():"_GetSenderIDUpper@0"
 Steam_GetSenderIDLower%():"_GetSenderIDLower@0"
@@ -58,6 +60,8 @@ Steam_GetSenderIDLower%():"_GetSenderIDLower@0"
 Steam_LoadPacket%():"_LoadPacket@0"
 Steam_SendPacketToUser%(upperID%, lowerID%, reliable%):"_SendPacketToUser@12"
 Steam_CloseConnection%(upperID%, lowerID%):"_CloseConnection@8"
+
+Steam_ReadAvail%():"_ReadAvail@0"
 
 Steam_CreateLobby%(lobbyType%, maxMembers%):"_CreateLobby@8"
 Steam_JoinLobby%(lobbyIDUpper%, lobbyIDLower%):"_JoinLobby@8"
@@ -79,7 +83,7 @@ Steam_CloseOnScreenKeyboard():"_CloseOnScreenKeyboard@0"
 
 Steam_BeginAuthSession%(ticket*, ticketSize%, upperID%, lowerID%):"_BeginAuthSession@12"
 Steam_EndAuthSession(upperID%, lowerID%):"_EndAuthSession@8"
-Steam_GetAuthSessionTicket%(ticket*, ticketSize%):"_GetAuthSessionTicket@4"
+Steam_GetAuthSessionTicket%(ticket*, ticketSize%):"_GetAuthSessionTicket@8"
 Steam_CancelAuthTicket(ticket%):"_CancelAuthTicket@4"
 
 Steam_GetAuthSessionResponse%():"__GetAuthSessionResponse@0"
@@ -113,6 +117,6 @@ GS_IsLoggedOn%():"_GS_IsLoggedOn@0"
 GS_Update():"_GS_Update@0"
 GS_GetSteamServersConnected%():"_GS_GetSteamServersConnected@0"
 
-GS_BeginAuthSession%(ticket*, ticketSize%, upperID%, lowerID%):"_GS_BeginAuthSession@12"
+GS_BeginAuthSession%(ticket*, ticketSize%, upperID%, lowerID%):"_GS_BeginAuthSession@16"
 GS_EndAuthSession(upperID%, lowerID%):"_GS_EndAuthSession@8"
 ; Steam_GetAuthSessionResponse() works for the client and gameserver.

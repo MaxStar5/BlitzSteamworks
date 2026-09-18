@@ -167,14 +167,21 @@ BS_API(void) PushString(const char* c) {
 	} while (ch);
 }
 
+BS_API(void) PushBytes(void** bank, int offset, int size) {
+	const uint8_t* data = reinterpret_cast<const uint8_t*>(*bank) + offset;
+	p2poutput.insert(p2poutput.end(), data, data + size);
+}
+
 void* p2pinputstart = nullptr; // Maintained for freeing the memory block later
 uint8_t* p2pinput = nullptr; // Current reading position pointer
+uint32_t p2pinputsize;
 
 int senderIDUpper = 0;
 int senderIDLower = 0;
 
 template <typename T>
 T Pull() {
+	if ((p2pinputsize - (p2pinput - (uint8_t*)p2pinputstart) < sizeof(T))) return T{};
 	T* t = reinterpret_cast<T*>(p2pinput);
 	p2pinput += sizeof(T);
 	return *t;
@@ -202,6 +209,22 @@ BS_API(const char*) PullString() {
 	return c;
 }
 
+BS_API(int) PullBytes(void** bank, int offset, int size) {
+	if (!bank || !*bank || size <= 0) return 0;
+
+	unsigned int remaining = p2pinputsize - (p2pinput - reinterpret_cast<uint8_t*>(p2pinputstart));
+
+	if (size > remaining) size = remaining;
+	if (size <= 0) return 0;
+
+	uint8_t* dest = reinterpret_cast<uint8_t*>(*bank) + offset;
+
+	memcpy(dest, p2pinput, size);
+	p2pinput += size;
+
+	return size;
+}
+
 BS_API(int) GetSenderIDUpper() {
 	return senderIDUpper;
 }
@@ -219,8 +242,7 @@ BS_API(int) LoadPacket() {
 		}
 		p2pinputstart = malloc(msgSize);
 		CSteamID steamIDRemote;
-		uint32 bytesRead = 0;
-		if (SteamNetworking()->ReadP2PPacket(p2pinputstart, msgSize, &bytesRead, &steamIDRemote)) {
+		if (SteamNetworking()->ReadP2PPacket(p2pinputstart, msgSize, &p2pinputsize, &steamIDRemote)) {
 			p2pinput = (uint8_t*) p2pinputstart;
 			uint64 id = steamIDRemote.ConvertToUint64();
 			senderIDUpper = idUpper(id);
@@ -232,6 +254,10 @@ BS_API(int) LoadPacket() {
 	} else {
 		return 0;
 	}
+}
+
+BS_API(int) ReadAvail() {
+	return p2pinputsize - (p2pinput - (uint8_t*)p2pinputstart);
 }
 
 BS_API(int) SendPacketToUser(int upperID, int lowerID, int reliable) {
@@ -359,35 +385,32 @@ BS_API(const char*) EE(const char* cid) {
 
 // Auth session
 EAuthSessionResponse authResponse;
-uint64_t authSteamID;
+uint32_t authSteamIDUpper, authSteamIDLower;
 uint32_t pcbTicket;
 
-BS_API(int) BeginAuthSession(void** ticket, int ticketSize, int upperID, int lowerID) {
-	const uint8_t* authTicket = static_cast<const uint8_t*>(*ticket);
-	return SteamUser()->BeginAuthSession(authTicket, ticketSize, idMerge(upperID, lowerID));
+BS_API(int) BeginAuthSession(void* ticket, int ticketSize, int upperID, int lowerID) {
+	return SteamUser()->BeginAuthSession(ticket, ticketSize, idMerge(upperID, lowerID));
 }
 
 BS_API(void) EndAuthSession(int upperID, int lowerID) {
 	SteamUser()->EndAuthSession(idMerge(upperID, lowerID));
 }
 
-BS_API(int) GetAuthSessionTicket(void** ticket, int ticketSize) {
-	uint8_t* authTicket = static_cast<uint8_t*>(*ticket);
-
-	HAuthTicket handle = SteamUser()->GetAuthSessionTicket(authTicket, ticketSize, &pcbTicket, nullptr);
+BS_API(int) GetAuthSessionTicket(void* ticket, int ticketSize) {
+	int handle = static_cast<int>(SteamUser()->GetAuthSessionTicket(ticket, ticketSize, &pcbTicket, nullptr));
 	return handle;
 }
 
 BS_API(int) _GetAuthSessionResponse() {
-	return authResponse;
+	return static_cast<int>(authResponse);
 }
 
 BS_API(int) GetAuthSessionReponseIDLower() {
-	return idLower(authSteamID);
+	return authSteamIDLower;
 }
 
 BS_API(int) GetAuthSessionReponseIDUpper() {
-	return idUpper(authSteamID);
+	return authSteamIDUpper;
 }
 
 BS_API(int) GetAuthSessionTicketSize() { return static_cast<int>(pcbTicket); }
@@ -522,5 +545,8 @@ void CallbackHandler::handleGameLobbyJoinRequested(GameLobbyJoinRequested_t* cal
 
 void CallbackHandler::handleAuthTicketResponse(ValidateAuthTicketResponse_t* callback) {
 	authResponse = callback->m_eAuthSessionResponse;
-	authSteamID = callback->m_SteamID.ConvertToUint64();
+
+	uint64_t id = callback->m_SteamID.ConvertToUint64();
+	authSteamIDUpper = idUpper(id);
+	authSteamIDLower = idLower(id);
 }
