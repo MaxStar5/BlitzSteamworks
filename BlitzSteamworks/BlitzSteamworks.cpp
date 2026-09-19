@@ -167,8 +167,8 @@ BS_API(void) PushString(const char* c) {
 	} while (ch);
 }
 
-BS_API(void) PushBytes(void** bank, int offset, int size) {
-	const uint8_t* data = reinterpret_cast<const uint8_t*>(*bank) + offset;
+BS_API(void) PushBytes(void* bank, int offset, int size) {
+	const uint8_t* data = reinterpret_cast<const uint8_t*>(bank) + offset;
 	p2poutput.insert(p2poutput.end(), data, data + size);
 }
 
@@ -209,17 +209,15 @@ BS_API(const char*) PullString() {
 	return c;
 }
 
-BS_API(int) PullBytes(void** bank, int offset, int size) {
-	if (!bank || !*bank || size <= 0) return 0;
+BS_API(int) PullBytes(void* bank, int offset, int size) {
+	if (!bank || size <= 0) return 0;
 
 	unsigned int remaining = p2pinputsize - (p2pinput - reinterpret_cast<uint8_t*>(p2pinputstart));
 
 	if (size > remaining) size = remaining;
 	if (size <= 0) return 0;
 
-	uint8_t* dest = reinterpret_cast<uint8_t*>(*bank) + offset;
-
-	memcpy(dest, p2pinput, size);
+	memcpy(reinterpret_cast<uint8_t*>(bank) + offset, p2pinput, size);
 	p2pinput += size;
 
 	return size;
@@ -484,8 +482,8 @@ BS_API(int) GetUserImageWidth(int image) {
 	return width;
 }
 
-BS_API(int) GetUserImageRGBA(int image, void** buffer, int bufferSize) {
-	uint8_t* imageBuffer = static_cast<uint8_t*>(*buffer);
+BS_API(int) GetUserImageRGBA(int image, void* buffer, int bufferSize) {
+	uint8_t* imageBuffer = static_cast<uint8_t*>(buffer);
 	return SteamUtils()->GetImageRGBA(image, imageBuffer, bufferSize);
 }
 
